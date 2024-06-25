@@ -62,49 +62,6 @@ function test_execute_sql_script()
   assert_equals_helper 'Expected 4 statistic entries' "$LINENO" 4 "$output"
 }
 
-function test_format_values_db()
-{
-  local output
-  local expected
-  local ret
-
-  output=$(format_values_db 0)
-  ret="$?"
-  expected='No arguments given'
-  assert_equals_helper 'Invalid db, error expected' "$LINENO" 22 "$ret"
-  assert_equals_helper 'Expected error msg' "$LINENO" "$expected" "$output"
-
-  output=$(format_values_db 3 'first' 'second' 'third')
-  ret="$?"
-  expected="('first','second','third')"
-  assert_equals_helper 'No error expected' "$LINENO" 0 "$ret"
-  assert_equals_helper 'Wrong output' "$LINENO" "$expected" "$output"
-
-  output=$(format_values_db 2 "some_func('lala xpto')" "somefunc2('lala xpto')")
-  ret="$?"
-  expected="(some_func('lala xpto'),somefunc2('lala xpto'))"
-  assert_equals_helper 'No error expected' "$LINENO" 0 "$ret"
-  assert_equals_helper 'Wrong output' "$LINENO" "$expected" "$output"
-
-  output=$(format_values_db 2 'first 1' 'second 1' 'first 2' 'second 2')
-  ret="$?"
-  expected="('first 1','second 1'),('first 2','second 2')"
-  assert_equals_helper 'No error expected' "$LINENO" 0 "$ret"
-  assert_equals_helper 'Wrong output' "$LINENO" "$expected" "$output"
-
-  output=$(format_values_db 1 "some 'quotes'")
-  ret="$?"
-  expected="('some ''quotes''')"
-  assert_equals_helper 'No error expected' "$LINENO" 0 "$ret"
-  assert_equals_helper 'Wrong output' "$LINENO" "$expected" "$output"
-
-  output=$(format_values_db 2 'first' 'NULL')
-  ret="$?"
-  expected="('first',NULL)"
-  assert_equals_helper 'No error expected' "$LINENO" 0 "$ret"
-  assert_equals_helper 'Wrong output' "$LINENO" "$expected" "$output"
-}
-
 function test_execute_command_db()
 {
   local output
@@ -625,6 +582,49 @@ function test_generate_set_clause()
   ret="$?"
   assert_equals_helper 'Wrong output' "$LINENO" "$expected" "$output"
   assert_equals_helper 'Expected no error' "$LINENO" 0 "$ret"
+}
+
+function test_format_values_db()
+{
+  local output
+  local expected
+  local ret
+
+  output=$(format_values_db 0)
+  ret="$?"
+  expected='No arguments given'
+  assert_equals_helper 'Invalid db, error expected' "$LINENO" 22 "$ret"
+  assert_equals_helper 'Expected error msg' "$LINENO" "$expected" "$output"
+
+  output=$(format_values_db 3 'first' 'second' 'third')
+  ret="$?"
+  expected="('first','second','third')"
+  assert_equals_helper 'No error expected' "$LINENO" 0 "$ret"
+  assert_equals_helper 'Wrong output' "$LINENO" "$expected" "$output"
+
+  output=$(format_values_db 2 "some_func('lala xpto')" "somefunc2('lala xpto')")
+  ret="$?"
+  expected="(some_func('lala xpto'),somefunc2('lala xpto'))"
+  assert_equals_helper 'No error expected' "$LINENO" 0 "$ret"
+  assert_equals_helper 'Wrong output' "$LINENO" "$expected" "$output"
+
+  output=$(format_values_db 2 'first 1' 'second 1' 'first 2' 'second 2')
+  ret="$?"
+  expected="('first 1','second 1'),('first 2','second 2')"
+  assert_equals_helper 'No error expected' "$LINENO" 0 "$ret"
+  assert_equals_helper 'Wrong output' "$LINENO" "$expected" "$output"
+
+  output=$(format_values_db 1 "some 'quotes'")
+  ret="$?"
+  expected="('some ''quotes''')"
+  assert_equals_helper 'No error expected' "$LINENO" 0 "$ret"
+  assert_equals_helper 'Wrong output' "$LINENO" "$expected" "$output"
+
+  output=$(format_values_db 2 'first' 'NULL')
+  ret="$?"
+  expected="('first',NULL)"
+  assert_equals_helper 'No error expected' "$LINENO" 0 "$ret"
+  assert_equals_helper 'Wrong output' "$LINENO" "$expected" "$output"
 }
 
 invoke_shunit
